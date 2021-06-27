@@ -24,7 +24,7 @@ class Listeners extends Prefab implements ListenerProviderInterface {
         krsort($this->listeners[$event]);
     }
 
-    public function getListenersForEvent($event) {
+    public function getListenersForEvent(object $event): iterable {
         $f3 = \Base::instance();
         $event_name = get_class($event);
 
