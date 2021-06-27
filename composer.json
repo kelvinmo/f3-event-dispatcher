@@ -3,7 +3,7 @@
     "description": "A PSR-14 compliant event dispatcher for the Fat-Free Framework",
     "type": "library",
     "require": {
-        "php": "^7.0 || ^8.0",
+        "php": "^7.2 || ^8.0",
         "psr/event-dispatcher": "^1.0",
         "bcosca/fatfree-core": "^3.5"
     },

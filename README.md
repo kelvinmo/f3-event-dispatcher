@@ -5,7 +5,7 @@ library for the [Fat-Free Framework][F3].
 
 ## Requirements
 
-- PHP 7.0 or later
+- PHP 7.2 or later
 - Fat-Free Framework 3.5 or later
 
 ## Usage
