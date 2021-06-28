@@ -10,7 +10,7 @@
     "require-dev": {
         "phpunit/phpunit": "^7.0 || ^9.3"
     },
-    "provides": {
+    "provide": {
         "psr/event-dispatcher-implementation": "1.0"
     },
     "autoload": {
