@@ -19,7 +19,7 @@ is a subclass of Fat-Free's `\Prefab` class.
 $listeners = \Listeners::instance();
 ```
 
-To add a listener, call the `on()` method.  The name of the event pass is
+To add a listener, call the `on()` method.  The name of the event is
 specified in the first parameter and the listener in the second
 parameter.
 
@@ -32,6 +32,9 @@ $listeners->on(FooEvent::class, 'Bar->listener');
 
 // Static method
 $listeners->on(FooEvent::class, 'Bar::listener');
+
+// PHP callable
+$listeners->on(FooEvent::class, [ $object, 'listener' ]);
 
 // Closure
 $listeners->on(FooEvent::class, function($event) {
