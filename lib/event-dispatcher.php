@@ -5,6 +5,17 @@ use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
 /**
+ * A generic event that provides the name of the event through the
+ * {@link getEventName()} method.
+ */
+interface GenericEvent {
+    /**
+     * @return string the name of the event
+     */
+    public function getEventName();
+}
+
+/**
  * Listener provider
  */
 class Listeners extends Prefab implements ListenerProviderInterface {
@@ -41,7 +52,11 @@ class Listeners extends Prefab implements ListenerProviderInterface {
      */
     public function getListenersForEvent(object $event): iterable {
         $f3 = \Base::instance();
-        $event_name = get_class($event);
+        if ($event instanceof GenericEvent) {
+            $event_name = $event->getEventName();
+        } else {
+            $event_name = get_class($event);
+        }
 
         if (!isset($this->listeners[$event_name])) return [];
 

@@ -54,6 +54,32 @@ $listeners->on(FooEvent::class, 'Baz->listener', 20);
 
 You can use `Listeners` with any [PSR-14]-compliant event dispatcher.
 
+#### Generic Events
+
+Sometimes it is too cumbersome to create a new event class for every
+single event.  You can use *generic events* to group a set of related
+events into a single class.
+
+A generic event implements the `GenericEvent` interface and provides the
+name of the event through the `getEventName()` method.
+
+```php
+class BarEvent implements GenericEvent {
+    private $eventName;
+
+    public function __construct($eventName) {
+        $this->eventName = $eventName;
+    }
+
+    public function getEventName() {
+        return $this->eventName;
+    }
+}
+
+$listeners->on('foo', 'Baz->listener');
+$event = new BarEvent('foo');
+```
+
 ### Event Dispatcher
 
 The event dispatcher is implemented by the `\Events` class.  `Events`

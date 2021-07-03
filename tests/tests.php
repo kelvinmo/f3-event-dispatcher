@@ -34,6 +34,19 @@ class TestEvent implements StoppableEventInterface {
     }
 }
 
+class TestGenericEvent extends TestEvent implements GenericEvent {
+    protected $eventName;
+
+    public function __construct($eventName, $stoppable = false) {
+        parent::__construct($stoppable);
+        $this->eventName = $eventName;
+    }
+
+    public function getEventName() {
+        return $this->eventName;
+    }
+}
+
 class FooEvent extends TestEvent {}
 class BarEvent extends TestEvent {}
 class BazEvent extends TestEvent {}
@@ -79,6 +92,19 @@ class ListenerTest extends TestCase {
             $listener($event);
         }
         $this->assertEquals('21', implode($event->getResults()));
+    }
+
+    function testGenericEvent() {
+        $listeners = new Listeners();
+
+        $listeners->on('foo', function($event) { $event->addResult('foo'); }, 1);
+        $listeners->on('bar', function($event) { $event->addResult('bar'); }, 2);
+
+        $event = new TestGenericEvent('foo');
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('foo', implode($event->getResults()));
     }
 
     function testF3Callable() {
