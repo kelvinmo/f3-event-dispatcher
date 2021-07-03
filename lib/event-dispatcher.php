@@ -4,9 +4,21 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
 
+/**
+ * Listener provider
+ */
 class Listeners extends Prefab implements ListenerProviderInterface {
     protected $listeners = [];
 
+    /**
+     * Adds a listener
+     * 
+     * @param $event string the name of the event (usually the name of the
+     * event class)
+     * @param $listener string|callable the listener as a F3 callable string
+     * or PHP callable
+     * @param $priority int the priority
+     */
     public function on($event, $listener, $priority = 0) {
         if (!is_string($event)) {
             throw new InvalidArgumentException('$event not a string');
@@ -24,6 +36,9 @@ class Listeners extends Prefab implements ListenerProviderInterface {
         krsort($this->listeners[$event]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getListenersForEvent(object $event): iterable {
         $f3 = \Base::instance();
         $event_name = get_class($event);
@@ -42,11 +57,19 @@ class Listeners extends Prefab implements ListenerProviderInterface {
     }
 }
 
+/**
+ * Event dispatcher
+ */
 class Events extends Prefab implements EventDispatcherInterface {
     /** @var ListenerProviderInterface */
     protected $provider;
 
-    public function __construct($provider = null) {
+    /**
+     * Creates the event dispatcher
+     * 
+     * @param $provider ListenerProviderInterface the listener provider
+     */
+    public function __construct(ListenerProviderInterface $provider = null) {
         if ($provider == null) {
             $this->provider = new Listeners();
         } else {
@@ -54,6 +77,9 @@ class Events extends Prefab implements EventDispatcherInterface {
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function dispatch($event) {
         $is_stoppable = $event instanceof StoppableEventInterface;
 
