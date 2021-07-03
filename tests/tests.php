@@ -34,7 +34,7 @@ class TestEvent implements StoppableEventInterface {
     }
 }
 
-class TestGenericEvent extends TestEvent implements GenericEvent {
+class TestGenericEvent extends TestEvent implements GenericEventInterface {
     protected $eventName;
 
     public function __construct($eventName, $stoppable = false) {

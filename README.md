@@ -60,11 +60,11 @@ Sometimes it is too cumbersome to create a new event class for every
 single event.  You can use *generic events* to group a set of related
 events into a single class.
 
-A generic event implements the `GenericEvent` interface and provides the
+A generic event implements `GenericEventInterface` and provides the
 name of the event through the `getEventName()` method.
 
 ```php
-class BarEvent implements GenericEvent {
+class BarEvent implements GenericEventInterface {
     private $eventName;
 
     public function __construct($eventName) {
