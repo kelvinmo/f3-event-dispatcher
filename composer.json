@@ -1,6 +1,7 @@
 {
     "name": "kelvinmo/f3-event-dispatcher",
     "description": "A PSR-14 compliant event dispatcher for the Fat-Free Framework",
+    "keywords": [ "event", "events" ],
     "type": "library",
     "require": {
         "php": "^7.2 || ^8.0",
