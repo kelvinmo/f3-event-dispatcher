@@ -80,6 +80,38 @@ $listeners->on('foo', 'Baz->listener');
 $event = new BarEvent('foo');
 ```
 
+#### Adding Listeners via Reflection
+
+You can also add listeners using reflection by the `map()` method.  This
+method takes a name or an instantiated object of a class.  A listener
+will be added based on a method of this class if:
+
+1. It is a `public` method (whether or not it is also `static`)
+2. The name of the method starts with `on`
+3. The method takes exactly one parameter, and the parameter is type-hinted
+   with an event class.
+
+The name of the event the method will listen to depends on the name of
+the method.  If the name of the method is the same as the short name
+of the type hint of the parameter, then the name of the event is the
+fully qualified name of the parameter type.  Otherwise, the name of the
+event is the method name converted to snake case.
+
+```php
+class TestListener {
+    // Will be mapped to FooEvent (with namespace)
+    public function onFooEvent(FooEvent $event) {
+    }
+
+    // Will be mapped to custom_event
+    public function onCustomEvent(BarEvent $event) {
+    }
+}
+
+$listeners = \Listeners::instance();
+$listeners->map(TestListener::class);
+```
+
 ### Event Dispatcher
 
 The event dispatcher is implemented by the `\Events` class.  `Events`

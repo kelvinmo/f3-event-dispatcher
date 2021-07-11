@@ -65,6 +65,36 @@ class TestF3 extends Prefab {
 }
 
 /* -------------------------------------------------------------------------
+ * Mock map listener
+ * ------------------------------------------------------------------------- */
+class TestListener {
+    // Should register as FooEvent
+    public function onFooEvent(FooEvent $event) {
+        $event->addResult('foo');
+    }
+
+    // Should register as custom_event
+    public function onCustomEvent(TestGenericEvent $event) {
+        $event->addResult('custom');
+    }
+
+    // Should not register (no hint)
+    public function onBarEvent($event) {
+        $event->addResult('should not happen');
+    }
+
+    // Should not register (incorrect method name)
+    public function BazEvent(BazEvent $event) {
+        $event->addResult('should not happen');
+    }
+
+    // Should not register (too many parameters)
+    public function onBazEvent(BazEvent $event, $invalid_param) {
+        $event->addResult('should not happen');
+    }
+}
+
+/* -------------------------------------------------------------------------
  * Listeners
  * ------------------------------------------------------------------------- */
 class ListenerTest extends TestCase {
@@ -123,6 +153,53 @@ class ListenerTest extends TestCase {
         }
         $this->assertEquals('static', implode($foo->getResults()));
         $this->assertEquals('object', implode($bar->getResults()));
+    }
+}
+
+/* -------------------------------------------------------------------------
+ * Mapping
+ * ------------------------------------------------------------------------- */
+class MapTest extends TestCase {
+    function createListeners() {
+        $listeners = new Listeners();
+        $listeners->map(TestListener::class);
+        return $listeners;
+    }
+
+    function testHintedEvent() {
+        $listeners = $this->createListeners();
+        $event = new FooEvent();
+
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('foo', implode($event->getResults()));
+    }
+
+    function testCustomEvent() {
+        $listeners = $this->createListeners();
+        $event = new TestGenericEvent('custom_event');
+
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('custom', implode($event->getResults()));
+    }
+
+    function testInvalidEvents() {
+        $listeners = $this->createListeners();
+
+        $event = new BarEvent();
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('', implode($event->getResults()));
+
+        $event = new BazEvent();
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('', implode($event->getResults()));
     }
 }
 

@@ -48,6 +48,73 @@ class Listeners extends Prefab implements ListenerProviderInterface {
     }
 
     /**
+     * Maps a listener class.
+     * 
+     * This method uses reflection on listener class to add event listeners.
+     * A method will be mapped if:
+     * 
+     * 1. It is a `public` method (whether or not it is also `static`)
+     * 2. The name of the method starts with `on`
+     * 3. The method takes exactly one parameter, and the parameter is type-hinted
+     *    with an event class.
+     * 
+     * The name of the event the method will listen to depends on the name of
+     * the method.  If the name of the method is the same as the short name
+     * of the type hint of the parameter, then the name of the event is the
+     * fully qualified name of the parameter type.  Otherwise, the name of the
+     * event is the method name converted to snake case.
+     * 
+     * For example, `public function onFooEvent(\Some\Namespace\FooEvent $event)`
+     * will map to `Some\Namespace\FooEvent`, whereas
+     * `public function onSomeOtherEvent(\Some\Namespace\FooEvent $event)` will
+     * map to `some_other_event`.
+     * 
+     * @param object|string $listener_class the listener class (either the class
+     * name or the instantiated object)
+     * @param $priority int the priority
+     */
+    public function map($listener_class, $priority = 0) {
+        $reflection = new ReflectionClass($listener_class);
+        $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        foreach ($methods as $method) {
+            $name = $method->getName();
+            $params = $method->getParameters();
+
+            // Remove methods that do not have exactly 1 hinted parameter
+            // or do not start with 'on' followed by an uppercase character
+            if (count($params) != 1) continue;
+            if (!$params[0]->hasType() || !($params[0]->getType() instanceof ReflectionNamedType)) continue;
+            if ((strlen($name) < 3) || (substr($name, 0, 2) != 'on') || (strtolower($name[2]) == $name[2])) continue;
+
+            $method_base_name = substr($name, 2);
+            $param_type_name = $params[0]->getType()->getName(); // This is a namespaced name
+            $param_short_name = (new ReflectionClass($param_type_name))->getShortName();
+
+            // If the base name of the method (the part after 'on') matches the
+            // short name of the hinted parameter, then we use the full name
+            // of the hinted parameter as the event name. Otherwise we convert
+            // the base name to snake case and use that as the event name
+            if ($method_base_name == $param_short_name) {
+                $event_name = $param_type_name;
+            } else {
+                $event_name = strtolower(preg_replace('/(?!^)\p{Lu}/u','_\0', $method_base_name));
+            }
+
+            // Get name of listener
+            if (is_object($listener_class)) {
+                $callable = [ $listener_class, $name ];
+            } elseif ($method->isStatic()) {
+                $callable = "$listener_class::$name";
+            } else {
+                $callable = "$listener_class->$name";
+            }
+
+            $this->on($event_name, $callable, $priority);
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getListenersForEvent(object $event): iterable {
