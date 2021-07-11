@@ -95,7 +95,9 @@ The name of the event the method will listen to depends on the name of
 the method.  If the name of the method is the same as the short name
 of the type hint of the parameter, then the name of the event is the
 fully qualified name of the parameter type.  Otherwise, the name of the
-event is the method name converted to snake case.
+event is the method name converted to snake case, in which case
+the event type must be a generic event (i.e. implements
+`GenericEventInterface`).
 
 ```php
 class TestListener {
@@ -104,6 +106,7 @@ class TestListener {
     }
 
     // Will be mapped to custom_event
+    // (BarEvent must implement GenericEventInterface)
     public function onCustomEvent(BarEvent $event) {
     }
 }
