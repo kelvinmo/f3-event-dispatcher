@@ -3,6 +3,9 @@
 This is a simple [PSR-14] compliant event dispatcher and listener provider
 library for the [Fat-Free Framework][F3].
 
+[![Latest Stable Version](https://poser.pugx.org/kelvinmo/f3-event-dispatcher/v/stable)](https://packagist.org/packages/kelvinmo/f3-event-dispatcher)
+[![build](https://github.com/kelvinmo/f3-event-dispatcher/workflows/CI/badge.svg)](https://github.com/kelvinmo/f3-event-dispatcher/actions?query=workflow%3ACI)
+
 ## Requirements
 
 - PHP 7.2 or later
