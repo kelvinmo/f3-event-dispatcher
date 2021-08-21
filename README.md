@@ -11,6 +11,14 @@ library for the [Fat-Free Framework][F3].
 - PHP 7.2 or later
 - Fat-Free Framework 3.5 or later
 
+## Installation
+
+You can install via [Composer](http://getcomposer.org/).
+
+```sh
+composer require kelvinmo/f3-event-dispatcher
+```
+
 ## Usage
 
 ### Listener Provider
