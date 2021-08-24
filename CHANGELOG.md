@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Changed: Licensing from GPL-3.0 to GPL-3.0 or later
+
 ## 0.1.1
 
 - Added: adding listeners via reflection through the `map()` method
