@@ -154,7 +154,7 @@ $dispatcher->dispatch(new FooEvent());
 
 ## Licence
 
-GPL 3
+GPL 3 or later
 
 [PSR-14]: https://www.php-fig.org/psr/psr-14/
 [F3]: https://fatfreeframework.com/
