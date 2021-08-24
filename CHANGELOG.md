@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.2
 
 - Changed: Licensing from GPL-3.0 to GPL-3.0 or later
 
