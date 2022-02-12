@@ -38,16 +38,18 @@ interface GenericEventInterface {
  * Listener provider
  */
 class Listeners extends Prefab implements ListenerProviderInterface {
+    /** @var array<mixed> $listeners */
     protected $listeners = [];
 
     /**
      * Adds a listener
      * 
-     * @param $event string the name of the event (usually the name of the
+     * @param string $event the name of the event (usually the name of the
      * event class)
-     * @param $listener string|callable the listener as a F3 callable string
+     * @param string|callable $listener the listener as a F3 callable string
      * or PHP callable
-     * @param $priority int the priority
+     * @param int $priority the priority
+     * @return void
      */
     public function on($event, $listener, $priority = 0) {
         if (!is_string($event)) {
@@ -88,9 +90,10 @@ class Listeners extends Prefab implements ListenerProviderInterface {
      * `public function onSomeOtherEvent(\Some\Namespace\FooEvent $event)` will
      * map to `some_other_event`.
      * 
-     * @param object|string $listener_class the listener class (either the class
+     * @param object|class-string $listener_class the listener class (either the class
      * name or the instantiated object)
-     * @param $priority int the priority
+     * @param int $priority the priority
+     * @return void
      */
     public function map($listener_class, $priority = 0) {
         $reflection = new ReflectionClass($listener_class);
@@ -107,6 +110,7 @@ class Listeners extends Prefab implements ListenerProviderInterface {
             if ((strlen($name) < 3) || (substr($name, 0, 2) != 'on') || (strtolower($name[2]) == $name[2])) continue;
 
             $method_base_name = substr($name, 2);
+            /** @var class-string $param_type_name */
             $param_type_name = $params[0]->getType()->getName(); // This is a namespaced name
             $param_short_name = (new ReflectionClass($param_type_name))->getShortName();
 
@@ -129,12 +133,15 @@ class Listeners extends Prefab implements ListenerProviderInterface {
                 $callable = "$listener_class->$name";
             }
 
+            /** @var callable $callable */
             $this->on($event_name, $callable, $priority);
         }
     }
 
     /**
      * {@inheritdoc}
+     * 
+     * @return iterable<callable>
      */
     public function getListenersForEvent(object $event): iterable {
         $f3 = \Base::instance();
@@ -168,7 +175,7 @@ class Events extends Prefab implements EventDispatcherInterface {
     /**
      * Creates the event dispatcher
      * 
-     * @param $provider ListenerProviderInterface the listener provider
+     * @param ListenerProviderInterface $provider the listener provider
      */
     public function __construct(ListenerProviderInterface $provider = null) {
         if ($provider == null) {
@@ -195,6 +202,7 @@ class Events extends Prefab implements EventDispatcherInterface {
                 throw $e;
             }
 
+            /** @var StoppableEventInterface $event */
             if ($is_stoppable && $event->isPropagationStopped()) {
                 return $event;
             }
