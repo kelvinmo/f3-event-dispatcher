@@ -48,6 +48,7 @@ class TestGenericEvent extends TestEvent implements GenericEventInterface {
 }
 
 class FooEvent extends TestEvent {}
+class FooSubclassEvent extends FooEvent {}
 class BarEvent extends TestEvent {}
 class BazEvent extends TestEvent {}
 
@@ -105,6 +106,18 @@ class ListenerTest extends TestCase {
         $listeners->on(BarEvent::class, function($event) { $event->addResult('bar'); });
 
         $event = new FooEvent();
+        foreach ($listeners->getListenersForEvent($event) as $listener) {
+            $listener($event);
+        }
+        $this->assertEquals('foo', implode($event->getResults()));
+    }
+
+    function testSubclassEvent() {
+        $listeners = new Listeners();
+
+        $listeners->on(FooEvent::class, function($event) { $event->addResult('foo'); });
+
+        $event = new FooSubclassEvent();
         foreach ($listeners->getListenersForEvent($event) as $listener) {
             $listener($event);
         }
