@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.4
 
 - Fixed: PSR-14 compliance to enable listeners to subclasses of an event
   type (#6)
