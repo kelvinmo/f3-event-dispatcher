@@ -34,6 +34,10 @@ To add a listener, call the `on()` method.  The name of the event is
 specified in the first parameter and the listener in the second
 parameter.
 
+As required by [PSR-14], if the name of the event is the name of a
+class, then the listener will also be triggered for all subclasses
+of that event class.
+
 The listener can be a PHP callable, or a string that can be resolved
 by Fat-Free's [`call()`] method
 
