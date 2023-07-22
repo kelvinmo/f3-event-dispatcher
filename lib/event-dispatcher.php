@@ -145,15 +145,36 @@ class Listeners extends Prefab implements ListenerProviderInterface {
      */
     public function getListenersForEvent(object $event): iterable {
         $f3 = \Base::instance();
+        $event_names = [];
+        $all_listeners = [];
+
         if ($event instanceof GenericEventInterface) {
-            $event_name = $event->getEventName();
+            $event_names = [ $event->getEventName() ];
         } else {
-            $event_name = get_class($event);
+            $event_names = [ get_class($event) ];
+
+            $refl = new \ReflectionClass($event);
+            while ($parent = $refl->getParentClass()) {
+                $event_names[] = $parent->getName();
+                $refl = $parent;
+            }
         }
 
-        if (!isset($this->listeners[$event_name])) return [];
+        foreach ($event_names as $event_name) {
+            if (!isset($this->listeners[$event_name])) continue;
+            foreach ($this->listeners[$event_name] as $priority => $listeners) {
+                if (isset($all_listeners[$priority])) {
+                    $all_listeners[$priority] = array_merge($all_listeners[$priority], $listeners);
+                } else {
+                    $all_listeners[$priority] = $listeners;
+                }
+            }
+        }
 
-        foreach ($this->listeners[$event_name] as $priority => $listeners) {
+        if (count($all_listeners) == 0) return [];
+        krsort($all_listeners);
+
+        foreach ($all_listeners as $priority => $listeners) {
             foreach ($listeners as $listener) {
                 if (is_string($listener)) {
                     $listener = $f3->grab($listener);
