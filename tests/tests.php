@@ -1,8 +1,12 @@
 <?php
 
+use F3\EventDispatcher\Events;
+use F3\EventDispatcher\GenericEventInterface;
+use F3\EventDispatcher\Listeners;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
+use F3\Prefab;
 
 /* -------------------------------------------------------------------------
  * Mock event classes
@@ -55,7 +59,9 @@ class BazEvent extends TestEvent {}
 /* -------------------------------------------------------------------------
  * Mock F3 callable object
  * ------------------------------------------------------------------------- */
-class TestF3 extends Prefab {
+class TestF3 {
+    use Prefab;
+
     static function staticRoute($event) {
         $event->addResult('static');
     }
