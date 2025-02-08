@@ -19,25 +19,22 @@
  * 
  */
 
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\EventDispatcher\ListenerProviderInterface;
-use Psr\EventDispatcher\StoppableEventInterface;
+namespace F3\EventDispatcher;
 
-/**
- * A generic event that provides the name of the event through the
- * {@link getEventName()} method.
- */
-interface GenericEventInterface {
-    /**
-     * @return string the name of the event
-     */
-    public function getEventName();
-}
+use \InvalidArgumentException;
+use \ReflectionClass;
+use \ReflectionMethod;
+use \ReflectionNamedType;
+use F3\Base;
+use F3\Prefab;
+use Psr\EventDispatcher\ListenerProviderInterface;
 
 /**
  * Listener provider
  */
-class Listeners extends Prefab implements ListenerProviderInterface {
+class Listeners implements ListenerProviderInterface {
+    use Prefab;
+
     /** @var array<mixed> $listeners */
     protected $listeners = [];
 
@@ -144,7 +141,7 @@ class Listeners extends Prefab implements ListenerProviderInterface {
      * @return iterable<callable>
      */
     public function getListenersForEvent(object $event): iterable {
-        $f3 = \Base::instance();
+        $f3 = Base::instance();
         $event_names = [];
         $all_listeners = [];
 
@@ -183,52 +180,6 @@ class Listeners extends Prefab implements ListenerProviderInterface {
                 yield $listener;
             }
         }
-    }
-}
-
-/**
- * Event dispatcher
- */
-class Events extends Prefab implements EventDispatcherInterface {
-    /** @var ListenerProviderInterface */
-    protected $provider;
-
-    /**
-     * Creates the event dispatcher
-     * 
-     * @param ListenerProviderInterface $provider the listener provider
-     */
-    public function __construct(ListenerProviderInterface $provider = null) {
-        if ($provider == null) {
-            $this->provider = Listeners::instance();
-        } else {
-            $this->provider = $provider;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function dispatch($event) {
-        $is_stoppable = $event instanceof StoppableEventInterface;
-
-        if ($is_stoppable && $event->isPropagationStopped()) {
-            return $event;
-        }
-
-        foreach ($this->provider->getListenersForEvent($event) as $listener) {
-            try {
-                $listener($event);
-            } catch (Throwable $e) {
-                throw $e;
-            }
-
-            /** @var StoppableEventInterface $event */
-            if ($is_stoppable && $event->isPropagationStopped()) {
-                return $event;
-            }
-        }
-        return $event;
     }
 }
 ?>
