@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0
+
+- No changes from v0.1.4 other than bumping major version to indicate
+  release
+
 ## 0.1.4
 
 - Fixed: PSR-14 compliance to enable listeners to subclasses of an event
