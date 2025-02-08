@@ -4,7 +4,7 @@
     "keywords": [ "event", "events" ],
     "type": "library",
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^8.2",
         "psr/event-dispatcher": "^1.0",
         "bcosca/fatfree-core": "v4.x-dev"
     },
