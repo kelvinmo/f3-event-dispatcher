@@ -8,8 +8,8 @@ library for the [Fat-Free Framework][F3].
 
 ## Requirements
 
-- PHP 7.2 or later
-- Fat-Free Framework 3.5 or later
+- PHP 8.2 or later
+- Fat-Free Framework 4.0 or later
 
 ## Installation
 
@@ -23,11 +23,11 @@ composer require kelvinmo/f3-event-dispatcher
 
 ### Listener Provider
 
-The listener provider is implemented by the `\Listeners` class.  `Listeners`
-is a subclass of Fat-Free's `\Prefab` class.
+The listener provider is implemented by the `F3\EventDispatcher\Listeners` class.
+`Listeners` uses Fat-Free's `F3\Prefab` trait.
 
 ```php
-$listeners = \Listeners::instance();
+$listeners = F3\EventDispatcher\Listeners::instance();
 ```
 
 To add a listener, call the `on()` method.  The name of the event is
@@ -75,10 +75,12 @@ Sometimes it is too cumbersome to create a new event class for every
 single event.  You can use *generic events* to group a set of related
 events into a single class.
 
-A generic event implements `GenericEventInterface` and provides the
-name of the event through the `getEventName()` method.
+A generic event implements `F3\EventDispatcher\GenericEventInterface`
+and provides the name of the event through the `getEventName()` method.
 
 ```php
+use F3\EventDispatcher\GenericEventInterface;
+
 class BarEvent implements GenericEventInterface {
     private $eventName;
 
@@ -126,17 +128,17 @@ class TestListener {
     }
 }
 
-$listeners = \Listeners::instance();
+$listeners = F3\EventDispatcher\Listeners::instance();
 $listeners->map(TestListener::class);
 ```
 
 ### Event Dispatcher
 
-The event dispatcher is implemented by the `\Events` class.  `Events`
-is a subclass of Fat-Free's `\Prefab` class.
+The event dispatcher is implemented by the `F3\EventDispatcher\Events` class.
+`Events` uses Fat-Free's `\Prefab` trait.
 
 ```php
-$dispatcher = \Events::instance();
+$dispatcher = F3\EventDispatcher\Events::instance();
 ```
 
 By default, `Events` uses the `Listeners` listener provider included in this
@@ -147,7 +149,7 @@ an argument in the constructor.
 use League\Event\PrioritizedListenerRegistry;
 
 $listenerProvider = new PrioritizedListenerRegistry();
-$dispatcher = \Events::instance($listenerProvider);
+$dispatcher = F3\EventDispatcher\Events::instance($listenerProvider);
 ```
 
 To use the event dispatcher, call the standard PSR-14 `dispatch()` method:
@@ -162,4 +164,4 @@ GPL 3 or later
 
 [PSR-14]: https://www.php-fig.org/psr/psr-14/
 [F3]: https://fatfreeframework.com/
-[`call()`]: https://fatfreeframework.com/3.7/base#call
+[`call()`]: https://fatfreeframework.com/4.0/base#call
