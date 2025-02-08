@@ -31,5 +31,10 @@
             "name": "Kelvin Mo",
             "email": "kmo@users.sourceforge.net"
         }
-    ]
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-features/f3-v4": "v2.0-dev"
+        }
+    }
 }
