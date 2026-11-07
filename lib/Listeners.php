@@ -48,7 +48,7 @@ class Listeners implements ListenerProviderInterface {
      * @param int $priority the priority
      * @return void
      */
-    public function on($event, $listener, $priority = 0) {
+    public function on($event, $listener, int $priority = 0) {
         if (!is_string($event)) {
             throw new InvalidArgumentException('$event not a string');
         }
@@ -130,7 +130,7 @@ class Listeners implements ListenerProviderInterface {
                 $callable = "$listener_class->$name";
             }
 
-            /** @var callable $callable */
+            // @phpstan-ignore argument.type
             $this->on($event_name, $callable, $priority);
         }
     }
