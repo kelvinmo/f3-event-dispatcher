@@ -1,5 +1,6 @@
 <?php
-
+use F3\EventDispatcher\Events;
+use F3\EventDispatcher\Listeners;
 use PHPUnit\Framework\TestCase;
 
 class ListenerTest extends TestCase {
@@ -15,7 +16,8 @@ class ListenerTest extends TestCase {
         }
         $this->assertEquals('foo', implode($event->getResults()));
 
-        
+        restore_error_handler();
+        restore_exception_handler();
     }
 
     function testSubclassEvent() {

@@ -1,5 +1,6 @@
 <?php
-
+use F3\EventDispatcher\Events;
+use F3\EventDispatcher\Listeners;
 use PHPUnit\Framework\TestCase;
 use Psr\EventDispatcher\ListenerProviderInterface;
 
@@ -23,9 +24,6 @@ class EventsTest extends TestCase {
         $dispatcher->dispatch($event);
 
         $this->assertEquals('12345', implode($event->getResults()));
-
-        restore_error_handler();
-        restore_exception_handler();
     }
 
     function testStoppableListeners() {
