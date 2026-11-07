@@ -1,5 +1,6 @@
 <?php
-
+use F3\EventDispatcher\Events;
+use F3\EventDispatcher\Listeners;
 use PHPUnit\Framework\TestCase;
 
 /* -------------------------------------------------------------------------
