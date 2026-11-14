@@ -198,7 +198,7 @@ class Events extends Prefab implements EventDispatcherInterface {
      * 
      * @param ListenerProviderInterface $provider the listener provider
      */
-    public function __construct(ListenerProviderInterface $provider = null) {
+    public function __construct(?ListenerProviderInterface $provider = null) {
         if ($provider == null) {
             $this->provider = Listeners::instance();
         } else {
