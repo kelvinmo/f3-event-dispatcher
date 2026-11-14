@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Fixed: Added explicit nullable typehint to `Events::__create()` to
+  fix compatibility errors
+
 ## 1.0.0
 
 - No changes from v0.1.4 other than bumping major version to indicate
